@@ -1,2 +1,1 @@
-# CC-Store-
-Free fire cc 
+index.html
