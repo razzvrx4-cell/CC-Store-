@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html lang="hi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+
+    <title>PlasticShark</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+        body { background: #0b0d17; color: white; overflow-x: hidden; }
+
+        #loginScreen { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; background: #0b0d17; padding: 20px; }
+
+        .login-box { background: #141826; padding: 30px; border-radius: 20px; border: 1px solid #2a2f45; width: 100%; max-width: 340px; text-align: center; box-shadow: 0 0 30px rgba(77, 192, 246, 0.2); }
+
+        .login-box h2 { font-size: 24px; background: linear-gradient(135deg, #4dc0f6, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
+
+        .login-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; background: #0b0d17; border: 1px solid #2a2f45; color: white; outline: none; }
+
+        .login-input:focus { border-color: #4dc0f6; }
+
+        .login-btn { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 10px; background: linear-gradient(135deg, #4dc0f6, #8c52ff); color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+
+        #mainSite { display: none; }
+
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(11,13,23,0.9); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #1e2235; }
+
+        .logo { font-size: 20px; font-weight: 800; color: #8c52ff; display: flex; align-items: center; gap: 8px; }
+
+        .logo i { color: #4dc0f6; }
+
+        .menu-btn { font-size: 24px; cursor: pointer; color: #aaa; }
+
+        .hero { text-align: center; padding: 40px 20px 20px; }
+
+        .hero h1 { font-size: 28px; margin-bottom: 10px; background: linear-gradient(135deg, #4dc0f6, #8c52ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .hero p { color: #b0b5c7; font-size: 14px; margin-bottom: 20px; line-height: 1.5; }
+
+        .section-title { text-align: center; font-size: 22px; font-weight: 700; margin: 40px 0 10px; background: linear-gradient(135deg, #4dc0f6, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        .section-sub { text-align: center; color: #888; font-size: 13px; margin-bottom: 20px; }
+
+        .features { display: flex; flex-direction: column; gap: 15px; padding: 0 20px; }
+
+        .feature-card { background: rgba(30, 34, 53, 0.5); padding: 20px; border-radius: 15px; backdrop-filter: blur(5px); border: 1px solid #2a2f45; }
+
+        .feature-card .icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 10px; }
+
+        .icon.blue { background: linear-gradient(135deg, #4dc0f6, #3b82f6); }
+
+        .icon.purple { background: linear-gradient(135deg, #8c52ff, #d946ef); }
+
+        .icon.green { background: linear-gradient(135deg, #10b981, #06b6d4); }
+
+        .feature-card h3 { font-size: 16px; margin-bottom: 5px; }
+
+        .feature-card p { color: #999; font-size: 13px; }
+
+        .cards-grid { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 15px; }
+
+        .card-item { background: linear-gradient(145deg, #141826, #1e2235); border-radius: 18px; padding: 20px; position: relative; border: 1px solid #2a2f45; }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+
+        .card-icon-box { width: 50px; height: 50px; border-radius: 14px; background: linear-gradient(135deg, #8c52ff, #4dc0f6); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; color: white; }
+
+        .card-details { flex: 1; margin-left: 12px; }
+
+        .card-details h4 { font-size: 14px; font-weight: 600; color: #eee; }
+
+        .card-details span { font-size: 11px; color: #777; }
+
+        .stock { background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 10px; border: 1px solid #34d399; }
+
+        .card-meta { display: flex; justify-content: space-between; margin: 15px 0; font-size: 12px; color: #aaa; }
+
+        .card-price { font-size: 24px; font-weight: 800; color: #4dc0f6; display: block; margin: 5px 0; }
+
+        .card-price span { font-size: 12px; color: #777; font-weight: 400; }
+
+        .card-actions { display: flex; gap: 10px; margin-top: 10px; }
+
+        .btn-buy { flex: 1; background: linear-gradient(135deg, #4dc0f6, #8c52ff); border: none; color: white; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+        .payment-gateway { padding: 20px; background: rgba(20, 24, 38, 0.5); margin: 20px; border-radius: 20px; }
+
+        .faq-section { padding: 0 20px 40px; }
+
+        .faq-item { background: #141826; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #2a2f45; display: flex; justify-content: space-between; align-items: center; font-size: 14px; }
+
+        .faq-item i { color: #888; }
+
+        .menu-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0b0d17; z-index: 9998; flex-direction: column; padding: 30px 20px; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .menu-close { font-size: 28px; color: #aaa; text-align: right; cursor: pointer; margin-bottom: 30px; }
+
+        .menu-links { display: flex; flex-direction: column; gap: 25px; flex: 1; }
+
+        .menu-links a { color: white; text-decoration: none; font-weight: 700; font-size: 18px; letter-spacing: 1px; }
+
+        .menu-buttons { display: flex; flex-direction: column; gap: 12px; margin-top: 30px; }
+
+        .menu-btn-action { padding: 14px; border-radius: 12px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; color: white; }
+
+        .btn-apply { background: linear-gradient(135deg, #ff4b5c, #d946ef); }
+
+        .btn-partner { background: transparent; border: 1px solid #2a2f45; color: #ccc; }
+
+        .btn-login { background: transparent; border: 1px solid #4dc0f6; color: #4dc0f6; }
+
+        .btn-register { background: linear-gradient(135deg, #4dc0f6, #8c52ff); }
+
+        .chat-overlay { display: none; position: fixed; bottom: 90px; right: 20px; width: 100%; max-width: 340px; background: #141826; border: 1px solid #2a2f45; border-radius: 20px; padding: 20px; z-index: 9997; box-shadow: 0 0 30px rgba(0,0,0,0.6); animation: pop 0.3s ease; }
+
+        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .chat-overlay h3 { font-size: 20px; color: white; margin-bottom: 5px; }
+
+        .chat-overlay p { font-size: 13px; color: #888; margin-bottom: 15px; }
+
+        .chat-overlay textarea { width: 100%; height: 100px; background: #0b0d17; border: 1px solid #2a2f45; border-radius: 10px; color: white; padding: 12px; outline: none; resize: none; margin-bottom: 15px; }
+
+        .chat-overlay textarea::placeholder { color: #666; }
+
+        .chat-send { width: 100%; padding: 12px; border: none; border-radius: 12px; background: linear-gradient(135deg, #4dc0f6, #8c52ff); color: white; font-weight: bold; cursor: pointer; }
+
+        .chat-btn { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; border-radius: 50%; background: linear-gradient(135deg, #4dc0f6, #8c52ff); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; box-shadow: 0 5px 20px rgba(77,192,246,0.3); cursor: pointer; z-index: 9996; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; z-index: 9999; padding: 20px; backdrop-filter: blur(8px); }
+
+        .modal-box { background: #141826; padding: 25px 20px; border-radius: 20px; border: 1px solid #2a2f45; max-width: 340px; width: 100%; text-align: center; animation: pop 0.3s ease; box-shadow: 0 0 40px rgba(77, 192, 246, 0.4); position: relative; }
+
+        .modal-box::before { content: ''; position: absolute; top: -20px; left: -20px; right: -20px; bottom: -20px; background: radial-gradient(circle, rgba(77, 192, 246, 0.2) 0%, transparent 70%); border-radius: 40px; z-index: -1; filter: blur(30px); }
+
+        .modal-box h2 { font-size: 20px; margin-bottom: 10px; background: linear-gradient(135deg, #4dc0f6, #d946ef); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        #qrcode { display: inline-block; background: white; padding: 10px; border-radius: 12px; margin: 10px auto; box-shadow: 0 0 15px rgba(77, 192, 246, 0.2); }
+
+        .utr-input-group { background: #0b0d17; border: 1px solid #2a2f45; border-radius: 8px; padding: 10px 12px; margin: 12px 0; display: flex; align-items: center; gap: 8px; }
+
+        .utr-input-group i { color: #4dc0f6; }
+
+        .utr-input-group input { background: transparent; border: none; outline: none; color: white; width: 100%; font-size: 14px; }
+
+        .utr-input-group input::placeholder { color: #666; }
+
+        .proof-upload-area { border: 2px dashed #2a2f45; padding: 15px; border-radius: 12px; margin: 12px 0; text-align: center; cursor: pointer; transition: 0.2s; }
+
+        .proof-upload-area:hover { border-color: #4dc0f6; background: rgba(77, 192, 246, 0.05); }
+
+        .proof-upload-area i { font-size: 24px; color: #888; margin-bottom: 5px; display: block; }
+
+        .proof-upload-area p { font-size: 12px; color: #888; }
+
+        #fileInput { display: none; }
+
+        .submit-proof-btn { background: linear-gradient(135deg, #10b981, #06b6d4); border: none; color: white; padding: 10px 20px; border-radius: 20px; font-weight: 600; font-size: 14px; cursor: pointer; width: 100%; margin-top: 5px; }
+
+        .close-popup-btn { background: transparent; border: 1px solid #2a2f45; color: #aaa; padding: 6px 20px; border-radius: 20px; font-size: 13px; cursor: pointer; margin-top: 12px; width: 100%; }
+
+    </style>
+
+</head>
+
+<body>
+
+<div id="loginScreen">
+
+<div class="login-box">
+
+<h2><i class="fas fa-shark"></i> CC STORE</h2>
+
+<p style="color: #888; font-size: 14px; margin-bottom: 20px;">Login to access your dashboard</p>
+
+<!-- Login बिल्कुल वैसा ही, कोई ID नहीं, कोई validation नहीं --> <button class="login-btn" onclick="openWebsite()">Welcome cc shop</button></div>
+
+</div>
+
+<div id="mainSite"><header>
+
+<div class="logo"><i class="fas fa-shark"></i> CC SHOP</div>
+
+<div class="menu-btn" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+
+</header>
+
+<section class="hero">
+
+<h1>Next-Gen Prepaid Cards</h1>
+
+<p>Experience lightning-fast card delivery with seamless UPI and crypto payments.</p>
+
+</section>
+
+<h2 class="section-title">Why Choose Us</h2>
+
+<p class="section-sub">Speed, Security &amp; Simplicity</p>
+
+<div class="features">
+
+<div class="feature-card">
+
+<div class="icon blue"><i class="fas fa-bolt"></i></div>
+
+<h3>Lightning Fast</h3>
+
+<p>Instant card delivery after payment confirmation.</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon purple"><i class="fas fa-lock"></i></div>
+
+<h3>Bank-Level Security</h3>
+
+<p>Advanced encryption for your peace of mind.</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon green"><i class="fas fa-coins"></i></div>
+
+<h3>Card buy</h3>
+
+<p>after purchase send Card details your email.</p>
+
+</div>
+
+</div>
+
+<h2 class="section-title">Featured Cards</h2>
+
+<p class="section-sub">Premium cards ready for instant delivery</p>
+
+<div class="cards-grid" id="cardGrid"></div>
+
+<div class="payment-gateway">
+
+<h3 style="text-align: center; color: #4dc0f6; margin-bottom: 10px;">Payment Gateway</h3>
+
+<p style="text-align: center; font-size: 13px; color: #888;">UPI Auto-Credit &amp; Crypto Payments</p>
+
+</div>
+
+<h2 class="section-title">FAQ</h2>
+
+<p class="section-sub">Got questions? We've got answers</p>
+
+<div class="faq-section">
+
+<div class="faq-item"><span>How fast is card delivery?</span> <i class="fas fa-chevron-down"></i></div>
+
+<div class="faq-item"><span>What payment methods do you accept?</span> <i class="fas fa-chevron-down"></i></div>
+
+<div class="faq-item"><span>How secure is the platform?</span> <i class="fas fa-chevron-down"></i></div>
+
+</div>
+
+<div class="chat-btn" onclick="toggleChat()"><i class="fas fa-comment-dots"></i></div>
+
+<!-- QR MODAL -->
+
+<div class="modal-overlay" id="qrModal">
+
+<div class="modal-box">
+
+<h2>Complete Payment</h2>
+
+<div id="qrcode"></div>
+
+<p style="font-size: 12px; color: #888; margin-top: 10px;">Scan with UPI App (GPay/PhonePe)</p>
+
+<div class="utr-input-group"><i class="fas fa-receipt"></i><input type="text" id="utrInput" placeholder="Enter UTR Number" /></div>
+
+<div class="proof-upload-area" onclick="document.getElementById('fileInput').click()"><i class="fas fa-cloud-upload-alt"></i>
+
+<p>Click to Add Payment Proof (Screenshot)</p>
+
+<input type="file" id="fileInput" accept="image/*" /></div>
+
+<button class="submit-proof-btn" onclick="submitProof()">Submit Proof</button> <button class="close-popup-btn" onclick="closeQRPopup()">Close</button></div>
+
+</div>
+
+</div>
+
+<!-- MENU OVERLAY -->
+
+<div class="menu-overlay" id="menuOverlay">
+
+<div class="menu-close" onclick="toggleMenu()"><i class="fas fa-times"></i></div>
+
+<div class="menu-links"><a href="#" onclick="triggerError()">Features</a><a href="#" onclick="triggerError()">Gateway</a><a href="#" onclick="triggerError()">Cards</a><a href="#" onclick="triggerError()">ccshop9@yahoo.com</a></div>
+
+<div class="menu-buttons"><button class="menu-btn-action btn-apply" onclick="triggerError()">Apply</button><button class="menu-btn-action btn-partner" onclick="triggerError()">Partner Login</button><button class="menu-btn-action btn-login" onclick="triggerError()">Login</button><button class="menu-btn-action btn-register" onclick="triggerError()">Register</button></div>
+
+</div>
+
+<!-- CHAT OVERLAY -->
+
+<div class="chat-overlay" id="chatOverlay">
+
+<h3>Need Help?</h3>
+
+<p>We're here to assist you</p>
+
+<textarea placeholder="Type your message..."></textarea> <button class="chat-send" onclick="sendMessage()">Send Message</button></div>
+
+<p>
+
+<script>
+
+        // ========== सिर्फ यहाँ पैसे बदले हैं ==========
+
+        const cardData = [
+
+            { id: '1881', limit: '$241', price: '₹999' },
+
+            { id: '7498', limit: '$292', price: '₹1299' },
+
+            { id: '4721', limit: '$690', price: '₹1499' },
+
+            { id: '4248', limit: '$658', price: '₹1500' },
+
+            { id: '1476', limit: '$454', price: '₹1699' },
+
+            { id: '9428', limit: '$345', price: '₹1799' },
+
+            { id: '3292', limit: '$412', price: '₹1999' },
+
+            { id: '5511', limit: '$278', price: '₹2199' },
+
+            { id: '6633', limit: '$521', price: '₹2499' },
+
+            { id: '7744', limit: '$399', price: '₹2799' },
+
+            { id: '8855', limit: '$612', price: '₹2999' },
+
+            { id: '9966', limit: '$487', price: '₹3199' },
+
+            { id: '1122', limit: '$333', price: '₹3499' }
+
+        ];
+
+        // ==========================================
+
+        const grid = document.getElementById('cardGrid');
+
+        cardData.forEach(card => {
+
+            const rand1 = Math.floor(Math.random()*16777215).toString(16);
+
+            const rand2 = Math.floor(Math.random()*16777215).toString(16);
+
+            // "Add to Cart" button हटा दिया गया है
+
+            grid.innerHTML += `<div class="card-item"><div class="card-top"><div class="card-icon-box" style="background: linear-gradient(135deg, #${rand1}, #${rand2});">V</div><div class="card-details"><h4>VISA CLASSIC</h4><span>${card.id}</span></div><span class="stock"><i class="fas fa-circle" style="font-size: 8px;"></i> In Stock</span></div><div class="card-meta"><span>Limit: <strong>${card.limit}</strong></span><span>Valid: 12/2028</span></div><div class="card-price">${card.price} <span>per card</span></div><div class="card-actions"><button class="btn-buy" onclick="openQRPopup()">Buy Now</button></div></div>`;
+
+        });
+
+        // ========== Login बिल्कुल वैसा ही (बिना किसी रोक-टोक के) ==========
+
+        function openWebsite() { 
+
+            document.getElementById('loginScreen').style.display = 'none'; 
+
+            document.getElementById('mainSite').style.display = 'block'; 
+
+        }
+
+        // बाकी सारे फंक्शन वैसे ही
+
+        function toggleMenu() { const menu = document.getElementById('menuOverlay'); menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex'; }
+
+        function triggerError() { alert("❌ Error 404: Page Not Found!\nWe are working on this feature."); toggleMenu(); }
+
+        function toggleChat() { const chat = document.getElementById('chatOverlay'); chat.style.display = chat.style.display === 'block' ? 'none' : 'block'; }
+
+        function sendMessage() { alert("✅ Message Sent!\nWe will get back to you shortly."); document.getElementById('chatOverlay').style.display = 'none'; }
+
+        
+
+        const qrModal = document.getElementById('qrModal'), fileInput = document.getElementById('fileInput'), utrInput = document.getElementById('utrInput');
+
+        function openQRPopup() {
+
+            qrModal.style.display = 'flex'; utrInput.value = ''; fileInput.value = '';
+
+            document.getElementById('qrcode').innerHTML = '';
+
+            new QRCode(document.getElementById("qrcode"), { text: "upi://pay?pa=cadder@ptyes&pn=Premium%20Card&cu=INR", width: 200, height: 200, colorDark: "#000000", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.H });
+
+        }
+
+        function closeQRPopup() { qrModal.style.display = 'none'; }
+
+        qrModal.addEventListener('click', (e) => { if (e.target === qrModal) closeQRPopup(); });
+
+        
+
+        function submitProof() {
+
+            const utr = utrInput.value.trim(), file = fileInput.files[0];
+
+            if (!utr) { alert("⚠️ Please enter the UTR Number!"); return; }
+
+            if (!file) { alert("⚠️ Please select a screenshot first!"); return; }
+
+            alert(`✅ Payment Proof Submitted!\nUTR: ${utr}\n\nWe will verify and deliver your card shortly.`);
+
+            closeQRPopup();
+
+        }
+
+</script>
+
+</p>
+
+</body>
+
+</html>
